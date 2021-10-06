@@ -1,0 +1,13 @@
+syntax = "proto3";
+package _0x1d.yakchain.yakchain;
+
+// this line is used by starport scaffolding # proto/tx/import
+
+option go_package = "github.com/0x1d/yakchain/x/yakchain/types";
+
+// Msg defines the Msg service.
+service Msg {
+    // this line is used by starport scaffolding # proto/tx/rpc
+}
+
+// this line is used by starport scaffolding # proto/tx/message

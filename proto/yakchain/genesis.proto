@@ -1,0 +1,11 @@
+syntax = "proto3";
+package _0x1d.yakchain.yakchain;
+
+// this line is used by starport scaffolding # genesis/proto/import
+
+option go_package = "github.com/0x1d/yakchain/x/yakchain/types";
+
+// GenesisState defines the yakchain module's genesis state.
+message GenesisState {
+    // this line is used by starport scaffolding # genesis/proto/state
+}
