@@ -1,14 +1,47 @@
-deps: waypoint starport
-serve: serve-ui serve-chain
+BIN = ~/go/bin/yakchaind
+CHAIN = build serve
+WAYPOINT = init build deploy release
 
-serve-ui:
-	cd vue && waypoint up
+default: info
 
-serve-chain:
-	starport chain serve
+it: starport cluster
+so: ui dev
 
-waypoint:
-	waypoint install -platform=docker -accept-tos
+
+info:
+	@echo "Starport: ${CHAIN}"
+	@echo "Waypoint: ${WAYPOINT}"
+
+$(CHAIN):
+	starport chain $@
+
+#$(WAYPOINT):
+#	waypoint $@
+
+# ---
+
+dev:
+	starport chain serve --reset-once --proto-all-modules
+
+ui:
+	cd vue && waypoint init && waypoint up
+
+# ---
+
+query:
+	~/go/bin/yakchaind query yakchain posts
+
+# ---
+
+cluster:
+	k3d cluster create yakchain --agents 3
+	kubectl config use-context k3d-yakchain
+	kubectl cluster-info
+	waypoint install --platform=kubernetes -accept-tos
+	waypoint ui -authenticate
 
 starport:
 	curl https://get.starport.network/starport! | bash
+
+not:
+	k3d cluster delete yakchain

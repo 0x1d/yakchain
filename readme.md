@@ -1,8 +1,14 @@
 # yakchain
+
 **yakchain** is a blockchain built using Cosmos SDK and Tendermint and created with [Starport](https://github.com/tendermint/starport).
 
-## Get started
+## TL;DR
+```
+make it so
+```
 
+## Get started
+Run the chain in development mode:
 ```
 starport chain serve
 ```

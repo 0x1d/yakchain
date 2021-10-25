@@ -9,7 +9,20 @@ option go_package = "github.com/0x1d/yakchain/x/yakchain/types";
 
 // Query defines the gRPC querier service.
 service Query {
-    // this line is used by starport scaffolding # 2
+    // Queries a list of posts items.
+	rpc Posts(QueryPostsRequest) returns (QueryPostsResponse) {
+		option (google.api.http).get = "/0x1d/yakchain/yakchain/posts";
+	}
+
+// this line is used by starport scaffolding # 2
+}
+
+message QueryPostsRequest {
+}
+
+message QueryPostsResponse {
+  string title = 1;
+  string body = 2;
 }
 
 // this line is used by starport scaffolding # 3
