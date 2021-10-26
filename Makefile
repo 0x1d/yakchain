@@ -31,23 +31,25 @@ $(TARGETS):
 starport:
 	curl https://get.starport.network/starport! | bash
 	
-dev:
+serve-clean:
 	starport chain serve --reset-once --proto-all-modules
 
-
-start:
-	~/go/bin/yakchaind start --home /home/master/.yakchain
-
+ownchain:
+	sudo chown -R ${UID}:${GUID} ${HOME}/.yakchain
 dskaffold:
 	docker run -ti -w /app -v $HOME/sdh:/home/.yakchain -v $PWD:/app starport/cli:0.16.0 app github.com/0x1d/yakchain
 drun:
 	docker run -ti -v $HOME/sdh:/home/.yakchain -v $PWD:/apps -p 1317:1317 -p 26657:26657 starport/cli:0.16.0 serve -p planet
-# ---
 
-query:
+# ---
+start:
+	~/go/bin/yakchaind start --home /home/master/.yakchain
+query-posts:
 	~/go/bin/yakchaind query yakchain posts
-
 # ---
+
+relayer:
+	starport relayer configure --advanced --source-rpc "http://0.0.0.0:26657" --source-faucet "http://0.0.0.0:4500" --source-port "blog" --source-version "blog-1" --target-rpc "http://0.0.0.0:26659" --target-faucet "http://0.0.0.0:4501" --target-port "yakchain" --target-version "yakchain-1"
 
 cluster:
 	k3d cluster create yakchain --agents 3
@@ -60,7 +62,4 @@ not:
 	k3d cluster delete yakchain
 	waypoint context clear
 
-
-ownit:
-	sudo chown -R ${UID}:${GUID} ${HOME}/.yakchain
 include yakchaind.mk

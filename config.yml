@@ -1,3 +1,9 @@
+#host:
+#  rpc: ":266567"
+#  p2p: ":26658"
+#  prof: ":6060"
+#  grpc: ":9090"
+#  api: ":1317"
 accounts:
   - name: alice
     coins: ["20000token", "200000000stake"]
@@ -7,6 +13,7 @@ validator:
   name: alice
   staked: "100000000stake"
 client:
+  #keyring-backend: "os"
   openapi:
     path: "docs/static/openapi.yml"
   vuex:
