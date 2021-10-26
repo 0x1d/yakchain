@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  node:
+    image: registry.gitlab.com/zwirbel/yakchain/node
+    container_name: yak-node
+    build:
+      context: ./
+    ports:
+      - 26657:26657
+      - 26656:26656
+      - 6060:6060 
+      - 9090:9090 
+      - 1317:1317 
+    volumes:
+      - ${HOME}/.yakchain:/home/yak/.yakchain:Z
+      - ${PWD}/:/apps:Z
+  ui:
+    image: registry.gitlab.com/zwirbel/yakchain/ui
+    container_name: yak-ui
+    build:
+      context: ./vue
+    ports:
+      - 3000:3000
+
+    environment:
+      - VUE_APP_API_COSMOS=https://rest.alpha.starport.network
+      - VUE_APP_WS_TENDERMINT=wss://rpc.alpha.starport.network/websocket
+      - VUE_APP_API_TENDERMINT=https://rpc.alpha.starport.network
+      - VUE_APP_ADDRESS_PREFIX=cosmos
+      - VUE_APP_CHAIN_ID=spn
+      - VUE_APP_CHAIN_NAME="Starport Network"

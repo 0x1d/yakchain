@@ -1,31 +1,47 @@
 BIN = ~/go/bin/yakchaind
 CHAIN = build serve
-WAYPOINT = init build deploy release
+#WAYPOINT = init build deploy release
+WAYPOINT = waypoint init && waypoint up -app
+TARGETS = ui node
+
+UID=$(shell id -u)
+GUID=$(shell id -g)
 
 default: info
 
-it: starport cluster
-so: ui dev
+it: cluster
+so: ui node
 
 
 info:
 	@echo "Starport: ${CHAIN}"
-	@echo "Waypoint: ${WAYPOINT}"
+#	@echo "Waypoint: ${WAYPOINT}"
 
 $(CHAIN):
 	starport chain $@
+
+$(TARGETS):
+	$(WAYPOINT) $@
 
 #$(WAYPOINT):
 #	waypoint $@
 
 # ---
 
+starport:
+	curl https://get.starport.network/starport! | bash
+	
 dev:
 	starport chain serve --reset-once --proto-all-modules
 
-ui:
-	cd vue && waypoint init && waypoint up
 
+start:
+	~/go/bin/yakchaind start --home /home/master/.yakchain
+
+dskaffold:
+	docker run -ti -w /app -v $HOME/sdh:/home/.yakchain -v $PWD:/app starport/cli:0.16.0 app github.com/0x1d/yakchain
+drun:
+	docker run -ti -v $HOME/sdh:/home/.yakchain -v $PWD:/apps -p 1317:1317 -p 26657:26657 starport/cli:0.16.0 serve -p planet
 # ---
 
 query:
@@ -40,8 +56,11 @@ cluster:
 	waypoint install --platform=kubernetes -accept-tos
 	waypoint ui -authenticate
 
-starport:
-	curl https://get.starport.network/starport! | bash
-
 not:
 	k3d cluster delete yakchain
+	waypoint context clear
+
+
+ownit:
+	sudo chown -R ${UID}:${GUID} ${HOME}/.yakchain
+include yakchaind.mk
