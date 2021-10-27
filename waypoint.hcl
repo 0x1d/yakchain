@@ -11,19 +11,22 @@ app "node" {
   }
 
   build {
-    use "docker" {}
+    use "docker" {
+      disable_entrypoint = true
+    }
     registry {
       use "docker" {
         image = "registry.gitlab.com/zwirbel/yakchain/node"
         tag   = "latest"
-        local = true
+        local = false
       }
     }
   }
 
   deploy {
-    use "kubernetes" {
-      #probe_path = "/"
+    use "kubernetes-apply" {
+      path        = "${path.app}/manifests/yakchain-node"
+      prune_label = "app=yakchain"
     }
   }
 
@@ -32,23 +35,6 @@ app "node" {
   }
 }
 
-
-
-
-#app "consul" {
-#    build {}
-#    deploy {
-#        use "helm" {
-#            repository = "https://helm.releases.hashicorp.com"
-#            chart = "consul"
-#            name = "consule"
-#            #set {
-#            #    name  = "deployment.image"
-#            #    value = artifact.name
-#            #}
-#        }
-#    }
-#}
 app "ui" {
 
   labels = {
@@ -60,23 +46,28 @@ app "ui" {
     use "docker" {
         context = "vue"
         dockerfile = "vue/Dockerfile"
+        disable_entrypoint = true
     }
     registry {
       use "docker" {
         image = "registry.gitlab.com/zwirbel/yakchain/ui"
         tag   = "latest"
-        local = true
+        local = false
       }
     }
   }
 
   deploy {
-    use "kubernetes" {
-      #probe_path = "/"
+    use "kubernetes-apply" {
+      path        = "${path.app}/manifests/yakchain-ui"
+      prune_label = "app=yakchain"
     }
   }
 
   release {
-    use "kubernetes" {}
+    use "kubernetes" {
+      load_balancer = true
+      port = 3000
+    }
   }
 }

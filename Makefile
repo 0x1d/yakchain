@@ -14,7 +14,7 @@ so: ui node
 
 
 info:
-	@echo "Starport: ${CHAIN}"
+	@echo "Targets: ${TARGETS}"
 #	@echo "Waypoint: ${WAYPOINT}"
 
 $(CHAIN):
@@ -23,21 +23,34 @@ $(CHAIN):
 $(TARGETS):
 	$(WAYPOINT) $@
 
-#$(WAYPOINT):
-#	waypoint $@
-
 # ---
+
+install-bin:
+	curl https://get.starport.network/0x1d/yakchain@latest! | sudo bash
 
 starport:
 	curl https://get.starport.network/starport! | bash
-	
+
+init:
+	starport chain init --home ~/.yakchain
+
+skaffold:
+	starport app github.com/0x1d/yakchain
+
 serve-clean:
 	starport chain serve --reset-once --proto-all-modules
 
-ownchain:
+relayer-config:
+	starport relayer configure --advanced --source-rpc "http://0.0.0.0:26657" --source-faucet "http://0.0.0.0:4500" --source-port "blog" --source-version "blog-1" --target-rpc "http://0.0.0.0:26659" --target-faucet "http://0.0.0.0:4501" --target-port "yakchain" --target-version "yakchain-1"
+
+me-owner:
 	sudo chown -R ${UID}:${GUID} ${HOME}/.yakchain
+
 dskaffold:
-	docker run -ti -w /app -v $HOME/sdh:/home/.yakchain -v $PWD:/app starport/cli:0.16.0 app github.com/0x1d/yakchain
+	docker run -ti -w /app \
+		-v $HOME/sdh:/home/.yakchain \
+		-v $PWD:/app starport/cli:0.16.0 \
+		app github.com/0x1d/yakchain
 drun:
 	docker run -ti -v $HOME/sdh:/home/.yakchain -v $PWD:/apps -p 1317:1317 -p 26657:26657 starport/cli:0.16.0 serve -p planet
 
@@ -48,11 +61,9 @@ query-posts:
 	~/go/bin/yakchaind query yakchain posts
 # ---
 
-relayer:
-	starport relayer configure --advanced --source-rpc "http://0.0.0.0:26657" --source-faucet "http://0.0.0.0:4500" --source-port "blog" --source-version "blog-1" --target-rpc "http://0.0.0.0:26659" --target-faucet "http://0.0.0.0:4501" --target-port "yakchain" --target-version "yakchain-1"
 
 cluster:
-	k3d cluster create yakchain --agents 3
+	k3d cluster create yakchain --agents 1
 	kubectl config use-context k3d-yakchain
 	kubectl cluster-info
 	waypoint install --platform=kubernetes -accept-tos
@@ -61,5 +72,8 @@ cluster:
 not:
 	k3d cluster delete yakchain
 	waypoint context clear
+
+sync:
+	waypoint config sync
 
 include yakchaind.mk

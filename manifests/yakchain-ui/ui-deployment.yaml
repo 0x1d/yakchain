@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yaml
+    kompose.version: 1.24.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: ui
+  name: ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: ui
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yaml
+        kompose.version: 1.24.0 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: ui
+    spec:
+      containers:
+        - env:
+            - name: VUE_APP_ADDRESS_PREFIX
+              value: cosmos
+            - name: VUE_APP_API_COSMOS
+              value: https://rest.alpha.starport.network
+            - name: VUE_APP_API_TENDERMINT
+              value: https://rpc.alpha.starport.network
+            - name: VUE_APP_CHAIN_ID
+              value: spn
+            - name: VUE_APP_CHAIN_NAME
+              value: '"Starport Network"'
+            - name: VUE_APP_WS_TENDERMINT
+              value: wss://rpc.alpha.starport.network/websocket
+          image: registry.gitlab.com/zwirbel/yakchain/ui
+          name: yak-ui
+          ports:
+            - containerPort: 3000
+          resources: {}
+      restartPolicy: Always
+status: {}

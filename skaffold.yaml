@@ -1,0 +1,23 @@
+apiVersion: skaffold/v2beta24
+kind: Config
+metadata:
+  name: yakchain
+build:
+  artifacts:
+  - image: registry.gitlab.com/zwirbel/yakchain/node
+    context: .
+    #buildpacks:
+    #  builder: gcr.io/buildpacks/builder:v1
+  - image: registry.gitlab.com/zwirbel/yakchain/ui
+    context: vue
+    #buildpacks:
+    #  builder: gcr.io/buildpacks/builder:v1
+deploy:
+  kubectl:
+    manifests:
+    - manifests/yakchain-node/node-claim0-persistentvolumeclaim.yaml
+    - manifests/yakchain-node/node-claim1-persistentvolumeclaim.yaml
+    - manifests/yakchain-node/node-deployment.yaml
+    - manifests/yakchain-node/node-service.yaml
+    - manifests/yakchain-ui/ui-deployment.yaml
+    - manifests/yakchain-ui/ui-service.yaml

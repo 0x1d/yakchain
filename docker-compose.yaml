@@ -22,7 +22,6 @@ services:
       context: ./vue
     ports:
       - 3000:3000
-
     environment:
       - VUE_APP_API_COSMOS=https://rest.alpha.starport.network
       - VUE_APP_WS_TENDERMINT=wss://rpc.alpha.starport.network/websocket
