@@ -51,15 +51,15 @@ spec:
             - containerPort: 1317
           resources: {}
           volumeMounts:
-            - mountPath: /home/yak/.yakchain
-              name: node-claim0
+            - mountPath: /home/yak/.yakchain/config
+              name: config
             - mountPath: /apps
-              name: node-claim1
+              name: node-claim0
       restartPolicy: Always
       volumes:
         - name: config
           configMap:
-            name: chain-config
+            name: yakchain-config
         - name: node-claim0
           persistentVolumeClaim:
             claimName: node-claim0

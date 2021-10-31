@@ -5,13 +5,13 @@ metadata:
 data:
   config.yml: |
     accounts:
-      - name: alice
+      - name: zwirbel
         coins: ["20000token", "200000000stake"]
-      - name: bob
-        coins: ["10000token", "100000000stake"]
+      - name: bluemli
+        coins: ["20000token", "200000000stake"]
     validator:
       name: alice
-      staked: "100000000stake"
+      staked: "200000000stake"
     client:
       #keyring-backend: "os"
       openapi:
